@@ -1,16 +1,27 @@
-name: Status Check
-on: [pull_request]
+name: PR status checks
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
 jobs:
-  test-and-lint:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       with:
-         jenkins-url: 'http://52.14.62.107:8080/job/multi-branch/'
-         jenkins-user: 'admin'
-         jenkins-token: ${{ secrets.MYTOKEN }}
-         job-name: 'multi-branch'
-    - name: Build and test
+        # Checkout the head ref instead of the PR branch that github creates.
+        ref: ${{ github.head_ref }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install and build
       run: |
-        curl -X POST -u "11dd4f8085055bba9af35e07a7f19501eb" http://52.14.62.107:8080/job/multi-branch/
+        npm install
+        npm run build
+    - name: Run status checks
+      run: node path/to/status-checks
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
