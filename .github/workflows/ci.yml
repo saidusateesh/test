@@ -7,10 +7,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-         jenkins-url: 'http://52.14.62.107:8080/'
+         jenkins-url: 'http://52.14.62.107:8080/job/multi-branch/'
          jenkins-user: 'admin'
          jenkins-token: ${{ secrets.MYTOKEN }}
-         job-name: 'mul-br'
+         job-name: 'multi-branch '
     - name: Build and test
       run: |
-        curl -X POST -u " 11dd4f8085055bba9af35e07a7f19501eb" http://52.14.62.107:8080/job/mul-br/
+        curl -X POST -u " 11dd4f8085055bba9af35e07a7f19501eb" http://52.14.62.107:8080/job/multi-branch/
